@@ -1,15 +1,5 @@
-FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
-
-ENV DEBIAN_FRONTEND=noninteractive \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    NVIDIA_VISIBLE_DEVICES=all \
-    NVIDIA_DRIVER_CAPABILITIES=compute,utility
-
-WORKDIR /workspace
-
-# System deps
-RUN apt-get update && apt-get install -y \
+RUN apt-get update || true && \
+    apt-get install -y --no-install-recommends \
     git \
     git-lfs \
     ffmpeg \
@@ -21,7 +11,9 @@ RUN apt-get update && apt-get install -y \
     wget \
     curl \
     ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+ || true && \
+    rm -rf /var/lib/apt/lists/*
+
 
 RUN git lfs install
 
