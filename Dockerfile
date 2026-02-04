@@ -30,7 +30,7 @@ RUN apt-get update && \
 RUN git lfs install
 
 # Clone ComfyUI
-RUN git clone https://github.com/comfyanonymous/ComfyUI.git /workspace/ComfyUI
+RUN git clone https://github.com/comfyanonymous/ComfyUI.git /workspace/ComfyU
 
 WORKDIR /workspace/ComfyUI
 
