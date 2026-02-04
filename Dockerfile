@@ -8,7 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /workspace
 
+# -------------------------
 # System dependencies
+# -------------------------
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
@@ -28,15 +30,27 @@ RUN apt-get update && \
 
 RUN git lfs install
 
+# -------------------------
 # Clone ComfyUI
+# -------------------------
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git /workspace/ComfyUI
 
 WORKDIR /workspace/ComfyUI
 
-# Python deps
+# -------------------------
+# Python dependencies
+# -------------------------
 RUN pip3 install --upgrade pip setuptools wheel && \
     pip3 install -r requirements.txt
 
+# -------------------------
+# Networking
+# -------------------------
 EXPOSE 8188
 
-CMD ["bash", "-lc", "cd /workspace/ComfyUI && python3 main.py --listen 0.0.0.0 --port 8188"]
+# -------------------------
+# FINAL CUT:
+# контейнер живёт всегда,
+# Comfy запускается вручную
+# -------------------------
+CMD ["bash", "-c", "echo 'Container alive. Start ComfyUI manually.' && sleep infinity"]
