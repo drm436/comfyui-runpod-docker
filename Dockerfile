@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /workspace
 
-# System deps
+# System dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
@@ -26,6 +26,7 @@ RUN apt-get update && \
         python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
+# Git LFS
 RUN git lfs install
 
 # Clone ComfyUI
@@ -33,10 +34,13 @@ RUN git clone https://github.com/comfyanonymous/ComfyUI.git /workspace/ComfyUI
 
 WORKDIR /workspace/ComfyUI
 
-# Python deps
+# Python dependencies
 RUN pip install --upgrade pip setuptools wheel && \
     pip install -r requirements.txt
 
+# ComfyUI port
 EXPOSE 8188
 
-CMD ["bash"]
+# === FINAL CUT ===
+# Run ComfyUI as the main container process
+CMD ["python3", "main.py", "--listen", "0.0.0.0", "--port", "8188"]
