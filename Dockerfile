@@ -10,9 +10,6 @@ ENV MAX_JOBS=4
 
 WORKDIR /workspace
 
-# -------------------------
-# System dependencies
-# -------------------------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     git-lfs \
@@ -34,24 +31,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN git lfs install
 
-# -------------------------
-# Python base tools
-# -------------------------
 RUN pip3 install --upgrade pip setuptools wheel
 
-# -------------------------
-# PyTorch (CUDA 12.1)
-# -------------------------
 RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
-# -------------------------
-# Flash Attention
-# -------------------------
 RUN pip3 install flash-attn --no-build-isolation
 
-# -------------------------
-# Clone ComfyUI
-# -------------------------
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git /workspace/ComfyUI
 
 WORKDIR /workspace/ComfyUI
@@ -61,5 +46,3 @@ RUN pip3 install -r requirements.txt
 EXPOSE 8188
 
 CMD ["sleep", "infinity"]
-
-# rebuild trigger
