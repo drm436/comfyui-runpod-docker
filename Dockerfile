@@ -1,27 +1,28 @@
-name: Build and Push Docker Image
+FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu22.04
 
-on:
-  push:
-    branches: ["main"]
+ENV DEBIAN_FRONTEND=noninteractive
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+WORKDIR /workspace
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+RUN apt-get update && apt-get install -y \
+    git \
+    git-lfs \
+    ffmpeg \
+    libgl1 \
+    libglib2.0-0 \
+    wget \
+    curl \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+RUN git clone https://github.com/comfyanonymous/ComfyUI.git
 
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: drm436/comfyui-runpod:latest
+WORKDIR /workspace/ComfyUI
+
+RUN pip3 install --upgrade pip
+RUN pip3 install -r requirements.txt
+
+EXPOSE 8188
+
+CMD ["python3", "main.py", "--listen", "0.0.0.0"]
